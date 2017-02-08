@@ -44,3 +44,64 @@ exports.getFotos = function(req, res) {
         });
     });
 };
+
+exports.getFoto = function(req, res) {
+    req.getConnection(function(err, connection) {
+        if (err)
+            res.status(400).send(err);
+
+        connection.query('SELECT * FROM Foto WHERE id = ?', [req.params.id], function(err, rows) {
+            if (err)
+                res.status(400).send(err);
+
+            if (rows.length != 1)
+                res.status(404).send();
+            else
+                res.json(rows[0]);
+        });
+    });
+};
+
+exports.putFoto = function(req, res) {
+    req.getConnection(function(err, connection) {
+        if (err)
+            res.status(400).send(err);
+
+        connection.query('UPDATE Foto SET ? WHERE id = ?', [req.body, req.params.id], function(err, rows) {
+            if (err)
+                res.status(400).send(err);
+
+            res.json(rows);
+        });
+    });
+};
+
+exports.deleteFoto = function(req, res) {
+    req.getConnection(function(err, connection) {
+        if (err)
+            res.status(400).send(err);
+
+        connection.beginTransaction(function(err) {
+            if (err)
+                res.status(400).send(err);
+
+            connection.query('DELETE FROM Foto WHERE id = ?', [req.params.id], function(err, rows) {
+                if (err) {
+                    connection.rollback(function() {
+                        res.status(400).send(err);
+                    });
+                }
+
+                connection.commit(function(err) {
+                    if (err) {
+                        connection.rollback(function() {
+                            res.status(400).send(err);
+                        });
+                    }
+
+                    res.json({ message: 'Foto excluída com sucesso!' });
+                });
+            });
+        });
+    });
+};

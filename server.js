@@ -12,11 +12,13 @@ var config = require('./config.json');
 // Create our Express application
 var app = express();
 
-app.use(fileUpload());
+//app.use(fileUpload());
 
 app.use(bodyParser.urlencoded({
     extended: true
 }));
+
+app.use('/api/fotos', fileUpload());
 
 /** MYSQL **/
 
@@ -38,6 +40,11 @@ var router = express.Router();
 router.route('/fotos')
     .get(fotoController.getFotos)
     .post(fotoController.postFotos);
+
+router.route('/fotos/:id')
+    .get(fotoController.getFoto)
+    .put(fotoController.putFoto)
+    .delete(fotoController.deleteFoto);
 
 // Register all our router with /api
 app.use('/api', router);
