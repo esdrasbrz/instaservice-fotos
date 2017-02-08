@@ -3,6 +3,7 @@
  */
 
 var config = require('../config.json');
+var fs = require('fs');
 
 exports.postFotos = function(req, res) {
     if (!req.files)
@@ -81,27 +82,39 @@ exports.deleteFoto = function(req, res) {
         if (err)
             res.status(400).send(err);
 
-        connection.beginTransaction(function(err) {
+        connection.query('SELECT * FROM Foto WHERE id = ?', [req.params.id], function(err, rows) {
             if (err)
                 res.status(400).send(err);
 
-            connection.query('DELETE FROM Foto WHERE id = ?', [req.params.id], function(err, rows) {
-                if (err) {
-                    connection.rollback(function() {
+            if (rows.length != 1) {
+                res.status(404).send();
+            } else {
+                var foto = rows[0];
+
+                connection.beginTransaction(function(err) {
+                    if (err)
                         res.status(400).send(err);
-                    });
-                }
 
-                connection.commit(function(err) {
-                    if (err) {
-                        connection.rollback(function() {
-                            res.status(400).send(err);
+                    connection.query('DELETE FROM Foto WHERE id = ?', [req.params.id], function(err, rows) {
+                        if (err) {
+                            connection.rollback(function() {
+                                res.status(400).send(err);
+                            });
+                        }
+
+                        connection.commit(function(err) {
+                            if (err) {
+                                connection.rollback(function() {
+                                    res.status(400).send(err);
+                                });
+                            }
+
+                            fs.unlink(config.server.uploads_dir + foto.arquivo);
+                            res.json({ message: 'Foto excluída com sucesso!' });
                         });
-                    }
-
-                    res.json({ message: 'Foto excluída com sucesso!' });
+                    });
                 });
-            });
+            }
         });
     });
 };
