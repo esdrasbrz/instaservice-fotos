@@ -7,12 +7,13 @@ var fileUpload = require('express-fileupload');
 
 var fotoController = require('./controllers/foto');
 
+var passport = require('passport')
+var authController = require('./controllers/auth');
+
 var config = require('./config.json');
 
 // Create our Express application
 var app = express();
-
-//app.use(fileUpload());
 
 app.use(bodyParser.urlencoded({
     extended: true
@@ -32,19 +33,22 @@ app.use(
     }, 'request')
 );
 
+// Passport para autenticação
+app.use(passport.initialize());
+
 /** ROUTES **/
 
 // Create our express router
 var router = express.Router();
 
 router.route('/fotos')
-    .get(fotoController.getFotos)
-    .post(fotoController.postFotos);
+    .get(authController.isAuthenticated, fotoController.getFotos)
+    .post(authController.isAuthenticated, fotoController.postFotos);
 
 router.route('/fotos/:id')
-    .get(fotoController.getFoto)
-    .put(fotoController.putFoto)
-    .delete(fotoController.deleteFoto);
+    .get(authController.isAuthenticated, fotoController.getFoto)
+    .put(authController.isAuthenticated, fotoController.putFoto)
+    .delete(authController.isAuthenticated, fotoController.deleteFoto);
 
 // Register all our router with /api
 app.use('/api', router);

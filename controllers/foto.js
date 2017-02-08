@@ -10,7 +10,7 @@ exports.postFotos = function(req, res) {
         res.status(400).send({message: "Nenhum arquivo de imagem!"});
 
     var arquivo = req.files.arquivo;
-    var nome_arquivo = String(Date.now());
+    var nome_arquivo = req.user.id + '.' + String(Date.now());
 
     arquivo.mv(config.server.uploads_dir + nome_arquivo, function(err) {
         if (err)
@@ -22,6 +22,7 @@ exports.postFotos = function(req, res) {
 
             var data = req.body;
             data['arquivo'] = nome_arquivo;
+            data['usuario_id'] = req.user.id;
             connection.query('INSERT INTO Foto SET ?', [data], function(err, rows) {
                 if (err)
                     res.status(400).send(err);
@@ -68,7 +69,7 @@ exports.putFoto = function(req, res) {
         if (err)
             res.status(400).send(err);
 
-        connection.query('UPDATE Foto SET ? WHERE id = ?', [req.body, req.params.id], function(err, rows) {
+        connection.query('UPDATE Foto SET ? WHERE id = ? and usuario_id = ?', [req.body, req.params.id, req.user.id], function(err, rows) {
             if (err)
                 res.status(400).send(err);
 
@@ -82,7 +83,7 @@ exports.deleteFoto = function(req, res) {
         if (err)
             res.status(400).send(err);
 
-        connection.query('SELECT * FROM Foto WHERE id = ?', [req.params.id], function(err, rows) {
+        connection.query('SELECT * FROM Foto WHERE id = ? and usuario_id = ?', [req.params.id, req.user.id], function(err, rows) {
             if (err)
                 res.status(400).send(err);
 
