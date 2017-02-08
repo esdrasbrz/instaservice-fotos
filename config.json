@@ -1,6 +1,7 @@
 {
     "server": {
-        "port": 3002
+        "port": 3002,
+        "uploads_dir": "/home/esdrasbrz/Projects/instaservice/instaservice-fotos/uploads/"
     },
     "bd": {
         "host": "localhost",
