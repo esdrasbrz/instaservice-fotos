@@ -1,0 +1,16 @@
+{
+    "server": {
+        "port": 3002
+    },
+    "bd": {
+        "host": "localhost",
+        "port": 3306,
+        "user": "root",
+        "password": "masterkey",
+        "database": "instaservice"
+    },
+    "apis": {
+        "usuarios": "http://localhost:3001/",
+        "fotos": "http://localhost:3002"
+    }
+}
