@@ -18,6 +18,7 @@
   "homepage": "https://github.com/esdrasbrz/instaservice-fotos#readme",
   "dependencies": {
     "body-parser": "^1.16.0",
+    "cors": "^2.8.1",
     "express": "^4.14.1",
     "express-fileupload": "0.0.6",
     "express-myconnection": "^1.0.4",

@@ -1,5 +1,6 @@
 // Get the packages we need
 var express = require('express');
+var cors = require('cors');
 var mysql = require('mysql');
 var connection = require('express-myconnection');
 var bodyParser = require('body-parser');
@@ -15,9 +16,9 @@ var config = require('./config.json');
 // Create our Express application
 var app = express();
 
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
+app.use(cors());
+
+app.use(bodyParser.json());
 
 app.use('/api/fotos', fileUpload());
 
