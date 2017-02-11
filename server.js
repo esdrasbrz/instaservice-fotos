@@ -58,7 +58,8 @@ app.use('/api', router);
 
 // Use environment defined port or 3000
 var port = config.server.port;
+var ip = config.server.ip;
 
 // Start the server
-app.listen(port);
-console.log('Listening: ' + port);
+app.listen(port, ip);
+console.log('Listening: ' + ip + ":" + port);

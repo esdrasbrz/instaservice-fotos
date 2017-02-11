@@ -1,5 +1,6 @@
 {
     "server": {
+        "ip": "192.168.1.11",
         "port": 3002,
         "uploads_dir": "/home/esdrasbrz/Projects/instaservice/instaservice-fotos/uploads/"
     },
@@ -11,7 +12,7 @@
         "database": "instaservice"
     },
     "apis": {
-        "usuarios": "http://localhost:3001/api/",
-        "fotos": "http://localhost:3002/api/"
+        "usuarios": "http://192.168.1.11:3001/api/",
+        "fotos": "http://192.168.1.11:3002/api/"
     }
 }
